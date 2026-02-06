@@ -5,6 +5,10 @@ defaultContentLanguageInSubdir: false
 title: Yahel Uffenheimer
 theme: "hugo-narrow"
 
+caches:
+  images:
+    dir: :cacheDir/images
+
 hasCJKLanguage: true
 enableEmoji: true
 

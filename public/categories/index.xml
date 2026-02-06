@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Yahel Uffenheimer</title>
+    <link>http://localhost:1313/categories/</link>
+    <description>Recent content in Categories on Yahel Uffenheimer</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <lastBuildDate>Sun, 01 Jun 2025 10:00:00 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Algebraic Algorithms</title>
+      <link>http://localhost:1313/categories/algebraic-algorithms/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/algebraic-algorithms/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Complexity</title>
+      <link>http://localhost:1313/categories/complexity/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/complexity/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Gradient Descent</title>
+      <link>http://localhost:1313/categories/gradient-descent/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/gradient-descent/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kernels</title>
+      <link>http://localhost:1313/categories/kernels/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/kernels/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Machine Learning</title>
+      <link>http://localhost:1313/categories/machine-learning/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/machine-learning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Math</title>
+      <link>http://localhost:1313/categories/math/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/math/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Matrix Multiplication</title>
+      <link>http://localhost:1313/categories/matrix-multiplication/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/matrix-multiplication/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Optimization</title>
+      <link>http://localhost:1313/categories/optimization/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/optimization/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Theory</title>
+      <link>http://localhost:1313/categories/theory/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/theory/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

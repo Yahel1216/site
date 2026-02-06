@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Series on Yahel Uffenheimer</title>
+    <link>http://localhost:1313/series/</link>
+    <description>Recent content in Series on Yahel Uffenheimer</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <lastBuildDate>Sun, 01 Jun 2025 10:00:00 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/series/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cut-Norm</title>
+      <link>http://localhost:1313/series/cut-norm/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/series/cut-norm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Fast Matrix Multiplication</title>
+      <link>http://localhost:1313/series/fast-matrix-multiplication/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/series/fast-matrix-multiplication/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kernel Methods</title>
+      <link>http://localhost:1313/series/kernel-methods/</link>
+      <pubDate>Sun, 01 Jun 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/series/kernel-methods/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

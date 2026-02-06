@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Matroids on Yahel Uffenheimer</title>
+    <link>http://localhost:1313/tags/matroids/</link>
+    <description>Recent content in Matroids on Yahel Uffenheimer</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <lastBuildDate>Sat, 10 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/matroids/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Basic Matroid Theory</title>
+      <link>http://localhost:1313/posts/matroid-theory/</link>
+      <pubDate>Sat, 10 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/matroid-theory/</guid>
+      <description>&lt;h1 id=&#34;basic-matroid-theory-and-infinite-extensions&#34;&gt;Basic Matroid Theory and Infinite Extensions&lt;/h1&gt;&#xA;&lt;p&gt;&lt;strong&gt;Prerequisites:&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Linear Algebra:&lt;/strong&gt; Vector spaces, basis, dimension, and linear independence.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Graph Theory:&lt;/strong&gt; Graphs, connected components, cycles, and spanning trees.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Set Theory:&lt;/strong&gt; Basic cardinality and Zorn&amp;rsquo;s Lemma (for the infinite section).&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;In this post, we will discuss the basics of &lt;strong&gt;Matroid Theory&lt;/strong&gt;. While often taught merely as a theoretical framework for Greedy Algorithms, matroids are a rich combinatorial structure in their own right. We will start with the finite foundations and then explore how these definitions behave (and break) when extended to the infinite case.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

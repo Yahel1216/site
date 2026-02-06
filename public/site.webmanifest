@@ -1,0 +1,25 @@
+{
+  "background_color": "#ffffff",
+  "categories": [
+    "blog",
+    "technology",
+    "education"
+  ],
+  "description": "Personal website of Yahel Uffenheimer, a PhD student in Computer Science at the Hebrew University of Jerusalem. Exploring research in Algorithm Design, Algebraic Computation, and Randomized Linear Algebra. Featuring a technical blog with deep dives into theoretical computer science papers, machine learning ideas and mathematical theory.",
+  "dir": "ltr",
+  "display": "standalone",
+  "icons": [
+    {
+      "sizes": "any",
+      "src": "/graph.svg",
+      "type": "image/svg+xml"
+    }
+  ],
+  "lang": "en-US",
+  "name": "Yahel Uffenheimer",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "short_name": "Yahel Uffenheimer",
+  "start_url": "/",
+  "theme_color": "#09090b"
+}

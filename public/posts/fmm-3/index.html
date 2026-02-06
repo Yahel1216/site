@@ -1,0 +1,3016 @@
+<!doctype html>
+<html
+  lang="en-US"
+  data-theme="default">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<title>Fast Matrix Multiplication - Part 3 | Yahel Uffenheimer</title>
+
+<meta name="description" content="Ways to manipulate tensors - the tensor product, direct sum, symmetrization and restriction" />
+<meta name="keywords" content="theory, matrix-multiplication, tensors" />
+<meta name="author" content="Yahel Uffenheimer" />
+<meta name="language" content="en-US" />
+
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="http://localhost:1313/posts/fmm-3/" />
+
+
+
+  <link rel="icon" type="image/svg+xml" href="/graph.svg" />
+
+
+
+<link rel="manifest" href="/site.webmanifest" />
+<meta property="og:url" content="http://localhost:1313/posts/fmm-3/">
+  <meta property="og:site_name" content="Yahel Uffenheimer">
+  <meta property="og:title" content="Fast Matrix Multiplication - Part 3">
+  <meta property="og:description" content="Ways to manipulate tensors - the tensor product, direct sum, symmetrization and restriction">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-15T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-15T00:00:00+00:00">
+    <meta property="article:tag" content="Theory">
+    <meta property="article:tag" content="Matrix-Multiplication">
+    <meta property="article:tag" content="Tensors">
+    <meta property="og:image" content="http://localhost:1313/images/og-default.avif">
+      <meta property="og:see_also" content="http://localhost:1313/posts/fmm-4/">
+      <meta property="og:see_also" content="http://localhost:1313/posts/fmm-2/">
+      <meta property="og:see_also" content="http://localhost:1313/posts/fmm-1/">
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/og-default.avif">
+  <meta name="twitter:title" content="Fast Matrix Multiplication - Part 3">
+  <meta name="twitter:description" content="Ways to manipulate tensors - the tensor product, direct sum, symmetrization and restriction">
+
+
+  <meta itemprop="name" content="Fast Matrix Multiplication - Part 3">
+  <meta itemprop="description" content="Ways to manipulate tensors - the tensor product, direct sum, symmetrization and restriction">
+  <meta itemprop="datePublished" content="2026-01-15T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-01-15T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1583">
+  <meta itemprop="image" content="http://localhost:1313/images/og-default.avif">
+  <meta itemprop="keywords" content="Theory,Matrix-Multiplication,Tensors">
+
+
+
+
+
+
+
+<script>
+  window.HUGO_SEARCH_CONFIG = {
+    searchIndexURL: "\"/index.json\""
+  };
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+
+
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+
+
+
+
+
+
+
+
+<script>
+
+  window.HUGO_GALLERY_CONFIG = {
+    justified_gallery:  false ,
+    lightbox:  false ,
+    justified: "{\"calculateitemsheight\":false,\"gutter\":30,\"lastrow\":\"center\",\"maxrowscount\":999999,\"resizedebounce\":100,\"rowheight\":300,\"rowheighttolerance\":0.25,\"transitionduration\":\"0.3s\"}",
+    lightbox_options: "{\"descposition\":\"bottom\",\"draggable\":true,\"height\":\"80vh\",\"loop\":true,\"preload\":true,\"touchnavigation\":true,\"width\":\"80vw\",\"zoomable\":true}"
+  };
+</script>
+
+
+
+
+  
+    <link rel="stylesheet" href="/css/compiled.css" />
+  
+
+
+
+
+
+  
+    <link rel="stylesheet" href="/css/chroma.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+
+      <script src="/js/main.js"></script>
+
+
+
+    <script src="/js/gumshoe.polyfills.min.js"></script>
+
+
+
+          <script src="/js/navigation.js" defer></script>
+
+    
+          <script src="/js/sidebar-position.js" defer></script>
+
+
+
+      <script src="/js/search.js" defer></script>
+
+
+
+      <script src="/js/dock.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+      
+      (function() {
+        const theme = localStorage.getItem('theme') || 'system';
+        const colorScheme = localStorage.getItem('colorScheme') || 'default';
+
+        
+        document.documentElement.setAttribute('data-theme', colorScheme);
+
+        
+        function applyTheme() {
+          if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        }
+
+        applyTheme();
+
+        
+        if (theme === 'system') {
+          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="bg-background text-foreground min-h-screen antialiased">
+    
+    
+  <div
+    id="reading-progress-container"
+    class="reading-progress-container pointer-events-none fixed top-0 right-0 left-0 z-50 transition-opacity duration-300 ease-out"
+    data-height="3"
+    data-smooth-scroll="true"
+    data-hide-on-complete="false">
+    
+    <div class="reading-progress-bg w-full"></div>
+
+    
+    <div
+      id="reading-progress-bar"
+      class="from-primary to-primary/80 reading-progress-bar 
+        transition-all duration-150 ease-out
+       absolute top-0 left-0 w-0 bg-gradient-to-r"></div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const progressContainer = document.getElementById(
+        "reading-progress-container",
+      );
+      const progressBar = document.getElementById("reading-progress-bar");
+
+      if (!progressContainer || !progressBar) return;
+
+      
+      const config = {
+        smoothScroll: progressContainer.dataset.smoothScroll === "true",
+        hideOnComplete: progressContainer.dataset.hideOnComplete === "true",
+      };
+
+      let isVisible = true;
+      let gumshoeInstance = null;
+
+      
+      function calculateProgress() {
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+        const documentHeight = document.documentElement.scrollHeight;
+        const windowHeight = window.innerHeight;
+        const scrollableHeight = documentHeight - windowHeight;
+
+        if (scrollableHeight <= 0) return 0;
+
+        return Math.min(Math.max((scrollTop / scrollableHeight) * 100, 0), 100);
+      }
+
+      
+      function updateProgress() {
+        const progress = calculateProgress();
+        progressBar.style.width = progress + "%";
+
+        
+        if (config.hideOnComplete && progress >= 99.5) {
+          if (isVisible) {
+            progressContainer.style.opacity = "0";
+            isVisible = false;
+          }
+        } else if (!isVisible) {
+          progressContainer.style.opacity = "1";
+          isVisible = true;
+        }
+      }
+
+      
+      let ticking = false;
+      function requestTick() {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            updateProgress();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      
+      function init() {
+        
+        window.addEventListener("scroll", requestTick, { passive: true });
+        window.addEventListener("resize", requestTick, { passive: true });
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden) requestTick();
+        });
+
+        
+        requestTick();
+
+        
+        window.addEventListener("beforeunload", () => {
+          window.removeEventListener("scroll", requestTick);
+          window.removeEventListener("resize", requestTick);
+        });
+      }
+
+      
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+
+    <header class=" mx-auto max-w-4xl px-4 py-6">
+  <div
+    class="border-border bg-card/80 flex items-center rounded-xl border px-6 py-4 shadow-sm backdrop-blur-sm">
+    
+    <div class="hidden w-full items-center md:flex md:min-w-0">
+      
+      <div class="flex items-center">
+        
+          
+          <a
+            href="/"
+            class="bg-primary text-primary-foreground hover:bg-primary/90 flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold transition-transform duration-200 hover:scale-105"
+            aria-label="Yahel Uffenheimer">
+            Y
+          </a>
+        
+      </div>
+
+      
+      <nav class="mx-8 flex flex-1 items-center justify-center min-w-0">
+        <div class="flex items-center space-x-1 flex-wrap justify-center">
+          
+          
+            
+            
+            
+              
+                
+              
+            
+            
+            <a
+              href="/about/"
+              class="nav-link 
+                text-muted-foreground hover:text-primary hover:bg-primary/10
+               focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none">
+              
+                <svg class="h-5 w-5" aria-label="nav.about" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+</svg>
+
+              
+              <span
+                >
+                  About
+                </span
+              >
+            </a>
+          
+            
+            
+            
+              
+                
+              
+            
+            
+            <a
+              href="/posts/"
+              class="nav-link 
+                text-muted-foreground hover:text-primary hover:bg-primary/10
+               focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none">
+              
+                <svg class="h-5 w-5" aria-label="nav.posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+              
+              <span
+                >
+                  Posts
+                </span
+              >
+            </a>
+          
+            
+            
+            
+              
+                
+              
+            
+            
+            <a
+              href="/publications/"
+              class="nav-link 
+                text-muted-foreground hover:text-primary hover:bg-primary/10
+               focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none">
+              
+                <svg class="h-5 w-5" aria-label="nav.publications" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M21 4H3a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2M3 19V6h8v13zm18 0h-8V6h8zm-7-9.5h6V11h-6zm0 2.5h6v1.5h-6zm0 2.5h6V16h-6z"/></svg>
+              
+              <span
+                >
+                  Publications
+                </span
+              >
+            </a>
+          
+            
+            
+            
+              
+                
+              
+            
+            
+            <a
+              href="/tags/"
+              class="nav-link 
+                text-muted-foreground hover:text-primary hover:bg-primary/10
+               focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none">
+              
+                <svg class="h-5 w-5" aria-label="nav.tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+              
+              <span
+                >
+                  Tags
+                </span
+              >
+            </a>
+          
+            
+            
+            
+              
+                
+              
+            
+            
+            <a
+              href="/archives/"
+              class="nav-link 
+                text-muted-foreground hover:text-primary hover:bg-primary/10
+               focus:ring-primary/20 relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none">
+              
+                <svg class="h-5 w-5" aria-label="nav.archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+              
+              <span
+                >
+                  Archives
+                </span
+              >
+            </a>
+          
+        </div>
+      </nav>
+
+      
+      <div class="flex items-center space-x-2">
+        
+        
+
+        
+        
+
+        
+        
+<div class="relative">
+  <button id="theme-toggle"
+    class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+    data-dropdown-type="theme"
+    aria-label="Toggle theme"
+    aria-expanded="false"
+    aria-haspopup="true">
+      
+      <svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+      
+      <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+      
+      <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+  
+  <div id="theme-dropdown"
+    class="dropdown-menu border-border bg-popover/95 absolute top-12 right-0 z-[60] hidden w-40 rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+    data-dropdown-type="theme"><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+</div>
+      </div>
+    </div>
+
+    
+    <div class="flex w-full items-center justify-between md:hidden">
+      
+      
+<div class="relative">
+  <button
+    id="mobile-menu-toggle"
+    class="dropdown-toggle border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground flex h-10 w-10 items-center justify-center rounded-lg border transition-colors duration-200"
+    data-dropdown-type="mobile-menu"
+    aria-label="Menu"
+    aria-expanded="false"
+    aria-haspopup="true">
+    <svg class="h-5 w-5" aria-label="Menu" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+</svg>
+
+  </button>
+
+  
+  <div
+    id="mobile-menu"
+    class="mobile-menu dropdown-menu border-border bg-popover/95 absolute top-12 left-0 z-[60] hidden w-80 max-w-[calc(100vw-2rem)] rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out md:hidden"
+    data-dropdown-type="mobile-menu"
+    role="menu"
+    aria-labelledby="mobile-menu-toggle">
+    <nav class="flex flex-col">
+      
+      
+        
+        
+        
+          
+            
+          
+        
+        
+        <a
+          href="/about/"
+          class="nav-link 
+            text-muted-foreground hover:text-primary hover:bg-primary/10
+           focus:ring-primary/20 relative flex items-center gap-3 rounded-md px-4 py-3 text-sm font-medium transition-all duration-200 ease-out hover:translate-x-1 focus:ring-2 focus:outline-none"
+          role="menuitem"
+          >
+          
+            <svg class="h-5 w-5" aria-label="nav.about" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+</svg>
+
+          
+          <span
+            >
+              About
+            </span
+          >
+        </a>
+      
+        
+        
+        
+          
+            
+          
+        
+        
+        <a
+          href="/posts/"
+          class="nav-link 
+            text-muted-foreground hover:text-primary hover:bg-primary/10
+           focus:ring-primary/20 relative flex items-center gap-3 rounded-md px-4 py-3 text-sm font-medium transition-all duration-200 ease-out hover:translate-x-1 focus:ring-2 focus:outline-none"
+          role="menuitem"
+          >
+          
+            <svg class="h-5 w-5" aria-label="nav.posts" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+          
+          <span
+            >
+              Posts
+            </span
+          >
+        </a>
+      
+        
+        
+        
+          
+            
+          
+        
+        
+        <a
+          href="/publications/"
+          class="nav-link 
+            text-muted-foreground hover:text-primary hover:bg-primary/10
+           focus:ring-primary/20 relative flex items-center gap-3 rounded-md px-4 py-3 text-sm font-medium transition-all duration-200 ease-out hover:translate-x-1 focus:ring-2 focus:outline-none"
+          role="menuitem"
+          >
+          
+            <svg class="h-5 w-5" aria-label="nav.publications" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M21 4H3a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2M3 19V6h8v13zm18 0h-8V6h8zm-7-9.5h6V11h-6zm0 2.5h6v1.5h-6zm0 2.5h6V16h-6z"/></svg>
+          
+          <span
+            >
+              Publications
+            </span
+          >
+        </a>
+      
+        
+        
+        
+          
+            
+          
+        
+        
+        <a
+          href="/tags/"
+          class="nav-link 
+            text-muted-foreground hover:text-primary hover:bg-primary/10
+           focus:ring-primary/20 relative flex items-center gap-3 rounded-md px-4 py-3 text-sm font-medium transition-all duration-200 ease-out hover:translate-x-1 focus:ring-2 focus:outline-none"
+          role="menuitem"
+          >
+          
+            <svg class="h-5 w-5" aria-label="nav.tags" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+</svg>
+
+          
+          <span
+            >
+              Tags
+            </span
+          >
+        </a>
+      
+        
+        
+        
+          
+            
+          
+        
+        
+        <a
+          href="/archives/"
+          class="nav-link 
+            text-muted-foreground hover:text-primary hover:bg-primary/10
+           focus:ring-primary/20 relative flex items-center gap-3 rounded-md px-4 py-3 text-sm font-medium transition-all duration-200 ease-out hover:translate-x-1 focus:ring-2 focus:outline-none"
+          role="menuitem"
+          >
+          
+            <svg class="h-5 w-5" aria-label="nav.archives" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+</svg>
+
+          
+          <span
+            >
+              Archives
+            </span
+          >
+        </a>
+      
+    </nav>
+  </div>
+</div>
+
+
+      
+      <div class="flex items-center space-x-2">
+        
+        
+
+        
+        
+
+        
+        
+<div class="relative">
+  <button id="theme-toggle"
+    class="dropdown-toggle border-border bg-background text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-300 ease-out hover:scale-105 focus:ring-2 focus:outline-none active:scale-95"
+    data-dropdown-type="theme"
+    aria-label="Toggle theme"
+    aria-expanded="false"
+    aria-haspopup="true">
+      
+      <svg class="h-5 w-5 sun-icon hidden relative z-10" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+
+      
+      <svg class="h-5 w-5 moon-icon hidden relative z-10" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+
+      
+      <svg class="h-5 w-5 system-icon hidden relative z-10" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+</button>
+
+  
+  <div id="theme-dropdown"
+    class="dropdown-menu border-border bg-popover/95 absolute top-12 right-0 z-[60] hidden w-40 rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-all duration-200 ease-out"
+    data-dropdown-type="theme"><button data-theme="light" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+</svg>
+<span>Light</span></button><button data-theme="dark" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="Dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+</svg>
+<span>Dark</span></button><button data-theme="system" class="text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex w-full items-center rounded-md px-4 py-2 text-sm transition-all duration-200 ease-out focus:outline-none"><svg class="h-5 w-5 mr-3 h-4 w-4" aria-label="System" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+<span>System</span></button></div>
+</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+    
+    <main class="mx-auto max-w-4xl px-4 py-6">
+      
+  
+  <nav
+  class="breadcrumb mb-4 md:mb-6 py-1"
+  aria-label="Breadcrumb navigation">
+  <ol class="text-muted-foreground flex items-center space-x-1 md:space-x-2 text-sm overflow-x-auto whitespace-nowrap scrollbar-hide py-1">
+    
+    <li class="flex-shrink-0">
+      <a
+        href="/"
+        class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex items-center gap-0.5 md:gap-1 rounded-lg px-1 md:px-3 py-0.5 md:py-1.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02]">
+        <svg class="h-4 w-4" aria-label="Home" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 12 2-2m0 0 7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+</svg>
+
+        <span class="max-w-[4rem] md:max-w-none truncate">Home</span>
+      </a>
+    </li>
+
+    
+    
+      <li class="flex items-center gap-1 md:gap-2 min-w-0">
+        <span class="text-muted-foreground/50 flex-shrink-0"
+          ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+        </span>
+
+        
+          
+          <div class="flex items-center gap-1 md:gap-2 min-w-0">
+            
+              
+              <a
+                href="/posts"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 flex items-center gap-0.5 md:gap-1 rounded-lg px-1 md:px-3 py-0.5 md:py-1.5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] flex-shrink-0">
+                
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+</svg>
+
+                  <span class="max-w-[3rem] md:max-w-none truncate">Posts</span>
+                
+              </a>
+              <span class="text-muted-foreground/50 flex-shrink-0"
+                ><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg></span
+              >
+            
+            
+            <span class="text-foreground flex items-center gap-0.5 md:gap-1 font-medium min-w-0">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+</svg>
+              <span class="max-w-[8rem] md:max-w-[16rem] lg:max-w-none truncate">Fast Matrix Multiplication - Part 3</span>
+            </span>
+          </div>
+        
+      </li>
+    
+
+  </ol>
+</nav>
+
+
+
+  
+
+
+  
+  
+
+
+
+
+  
+  
+      
+
+
+  
+  
+  <div class="bg-accent/30 border-accent/50 mb-6 rounded-xl border p-5">
+    <div class="flex flex-col gap-4">
+      
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex items-start gap-3 min-w-0 flex-1">
+          <div class="flex-shrink-0 mt-0.5">
+            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M21 4H3a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2M3 19V6h8v13zm18 0h-8V6h8zm-7-9.5h6V11h-6zm0 2.5h6v1.5h-6zm0 2.5h6V16h-6z"/></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                Series
+              </span>
+                <span class="bg-accent text-accent-foreground rounded-full px-2 py-0.5 text-xs font-semibold">
+                  2/4
+                </span>
+            </div>
+            <a
+              href="/series/fast-matrix-multiplication/"
+              class="text-foreground hover:text-primary text-lg font-semibold transition-colors duration-200 line-clamp-2">
+              Fast Matrix Multiplication
+            </a>
+          </div>
+        </div>
+        
+        
+        <a
+          href="/series/fast-matrix-multiplication/"
+          class="text-primary hover:bg-primary/10 flex-shrink-0 flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200 hover:scale-105"
+          aria-label="View All">
+          <span class="hidden sm:inline">View All</span>
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+        </a>
+      </div>
+
+      
+        <div class="border-border flex items-center gap-2 border-t pt-4">
+          
+            <a
+              href="/posts/fmm-4/"
+              class="text-muted-foreground hover:text-primary hover:bg-muted/50 flex flex-1 items-center gap-2 rounded-lg px-3 py-2 text-sm transition-all duration-200 hover:scale-[1.02]"
+              title="Fast Matrix Multiplication - Part 4">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+</svg>
+              <div class="min-w-0 flex-1">
+                <div class="text-xs opacity-70">Previous</div>
+                <div class="truncate font-medium">Fast Matrix Multiplication - Part 4</div>
+              </div>
+            </a>
+
+          
+          <div class="border-border h-12 w-px border-l"></div>
+
+          
+            <a
+              href="/posts/fmm-2/"
+              class="text-muted-foreground hover:text-primary hover:bg-muted/50 flex flex-1 items-center gap-2 rounded-lg px-3 py-2 text-sm transition-all duration-200 hover:scale-[1.02]"
+              title="Fast Matrix Multiplication - Part 2">
+              <div class="min-w-0 flex-1 text-right">
+                <div class="text-xs opacity-70">Next</div>
+                <div class="truncate font-medium">Fast Matrix Multiplication - Part 2</div>
+              </div>
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+            </a>
+        </div>
+    </div>
+  </div>
+
+
+
+  
+  <header class="mb-8">
+    
+
+
+<div class="post-meta">
+  
+  <h1 class="text-foreground mb-6 text-3xl leading-tight font-bold md:text-4xl">
+    Fast Matrix Multiplication - Part 3
+  </h1>
+
+  
+  
+
+
+  
+  <div class="bg-card border-border flex flex-col gap-4 rounded-xl border p-6">
+    
+    <div
+      class="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
+      
+      <div class="flex items-center gap-2">
+        <svg class="h-4 w-4" aria-label="Published on" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+        <time datetime="2026-01-15">
+          January 15, 2026
+        </time>
+      </div>
+
+      
+      
+
+
+      
+      
+        <div class="flex items-center gap-2">
+          <svg class="h-4 w-4" aria-label="Reading time" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+
+          <span
+            >8 minute</span
+          >
+        </div>
+      
+
+
+      
+      
+        <div class="flex items-center gap-2">
+          <svg class="h-4 w-4" aria-label="Word count" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+          <span>1583 words</span>
+        </div>
+      
+
+    </div>
+
+    
+    
+    
+      <div class="flex flex-wrap items-center gap-4">
+        
+        
+          <div class="flex items-center gap-2">
+            <svg class="h-4 w-4" aria-label="Series" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M21 4H3a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2M3 19V6h8v13zm18 0h-8V6h8zm-7-9.5h6V11h-6zm0 2.5h6v1.5h-6zm0 2.5h6V16h-6z"/></svg>
+            <span class="text-muted-foreground mr-2 text-sm"
+              >Series:</span
+            >
+            <div class="flex flex-wrap gap-2">
+              
+                <a
+                  href="/series/fast-matrix-multiplication/"
+                  class="bg-accent/80 text-accent-foreground hover:bg-accent focus:ring-accent/20 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-md focus:ring-2 focus:outline-none">
+                  <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19.562 7a2.132 2.132 0 0 0-2.1-2.5H6.538a2.132 2.132 0 0 0-2.1 2.5M17.5 4.5c.028-.26.043-.389.043-.496a2 2 0 0 0-1.787-1.993C15.65 2 15.52 2 15.26 2H8.74c-.26 0-.391 0-.497.011a2 2 0 0 0-1.787 1.993c0 .107.014.237.043.496" opacity="0.5"/><path stroke-linecap="round" d="M15 18H9"/><path d="M2.384 13.793c-.447-3.164-.67-4.745.278-5.77C3.61 7 5.298 7 8.672 7h6.656c3.374 0 5.062 0 6.01 1.024s.724 2.605.278 5.769l-.422 3c-.35 2.48-.525 3.721-1.422 4.464s-2.22.743-4.867.743h-5.81c-2.646 0-3.97 0-4.867-.743s-1.072-1.983-1.422-4.464z"/></g></svg>
+                  Fast Matrix Multiplication
+                </a>
+              
+            </div>
+          </div>
+        
+
+        
+        
+          <div class="flex items-center gap-2">
+            <svg class="h-4 w-4" aria-label="Categories" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+</svg>
+            <span class="text-muted-foreground mr-2 text-sm"
+              >Categories:</span
+            >
+            <div class="flex flex-wrap gap-2">
+              
+                <a
+                  href="/categories/theory/"
+                  class="bg-primary/10 text-primary hover:bg-primary/20 focus:ring-primary/20 inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-md focus:ring-2 focus:outline-none">
+                  Theory
+                </a>
+              
+                <a
+                  href="/categories/matrix-multiplication/"
+                  class="bg-primary/10 text-primary hover:bg-primary/20 focus:ring-primary/20 inline-flex items-center rounded-full px-3 py-1 text-sm font-medium transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-md focus:ring-2 focus:outline-none">
+                  Matrix Multiplication
+                </a>
+              
+            </div>
+          </div>
+        
+
+
+        
+        
+          <div class="flex items-center gap-2">
+            <svg class="h-4 w-4" aria-label="Tags" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+		<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
+		<circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
+	</g>
+</svg>
+            <span class="text-muted-foreground mr-2 text-sm"
+              >Tags:</span
+            >
+            <div class="flex flex-wrap gap-2">
+              
+                <a
+                  href="/tags/theory/"
+                  class="bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary focus:ring-primary/20 inline-flex items-center rounded px-2 py-1 text-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none">
+                  #theory
+                </a>
+              
+                <a
+                  href="/tags/matrix-multiplication/"
+                  class="bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary focus:ring-primary/20 inline-flex items-center rounded px-2 py-1 text-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none">
+                  #matrix-multiplication
+                </a>
+              
+                <a
+                  href="/tags/tensors/"
+                  class="bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary focus:ring-primary/20 inline-flex items-center rounded px-2 py-1 text-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none">
+                  #tensors
+                </a>
+              
+            </div>
+          </div>
+        
+
+      </div>
+    
+
+
+    
+    
+
+  </div>
+</div>
+
+  </header>
+
+  
+  <article class="prose prose-neutral dark:prose-invert mb-12 max-w-none">
+    <div
+    class="alert alert-note my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-note) 10%, transparent);
+              border-left-color: var(--color-note);
+              --hover-bg: color-mix(in srgb, var(--color-note) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-note) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-0-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-0-title"
+          class="m-0 font-semibold text-foreground/90">
+          Prerequisites
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-0-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <ul>
+<li><strong><a href="/posts/fmm-2">Part 2 of this series</a>:</strong> Familiarity with the tensor product of vector spaces and bilinear algorithms.</li>
+<li><strong>Linear Algebra:</strong> Vector spaces, Bases, Dual spaces, and Tensor Products (basic definition).</li>
+</ul>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p>In this post, we continue building the foundation for fast matrix multiplication algorithms. We will discuss essential tensor operations—product, sum, and restriction—and establish the Triple Product Condition, setting the stage for the group-theoretic approach.</p>
+<h2 id="tensor-operations---tensor-product">Tensor Operations - Tensor Product</h2>
+<p>Recall the definition of a 3-d tensor as a weighted sum of simple tensors in a space $U\otimes V \otimes W$:
+$$
+\mathcal{T}=\sum_{i}\sum_{j}\sum _{\ell}T_{i,j,\ell}(u_{i}\otimes v_{j} \otimes w_{\ell})
+$$
+where ${u_{i}},{v_{j}},{w_{\ell}}$ are bases for $U,V,W$ respectively.</p>
+<div
+    class="alert alert-caution my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-caution) 10%, transparent);
+              border-left-color: var(--color-caution);
+              --hover-bg: color-mix(in srgb, var(--color-caution) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-caution) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-1-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-1-title"
+          class="m-0 font-semibold text-foreground/90">
+          Definition
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-1-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>The <strong>tensor product</strong> of two 3-d tensors $\mathcal{T}_1$ (over $U_{1}\otimes V_{1}\otimes W_{1}$) and $\mathcal{T}_2$ (over $U_{2}\otimes V_{2}\otimes W_{2}$) is a tensor $\mathcal{T}_{1}\otimes \mathcal{T}_{2}$ over the space:
+$$ \underbrace{(U_{1}\otimes U_{2})}_{U}\otimes\underbrace{(V_{1}\otimes V_{2})}_{V }\otimes\underbrace{(W_{1}\otimes W_{2})}_{W} $$
+It is defined by the formula:
+$$ \mathcal{T}_{1}\otimes \mathcal{T}_{2}=\sum_{\substack{i,i&rsquo;,j,j&rsquo;\ell,\ell&rsquo;}} (T_{i,j,\ell}^{1} \cdot T^{2}_{i&rsquo;,j&rsquo;,\ell&rsquo;}) \cdot [(u_{i}\otimes u_{i&rsquo;})\otimes (v_{j}\otimes v_{j&rsquo;})\otimes (w_{\ell}\otimes w_{\ell&rsquo;})] $$
+In other words, it is a <strong>simple</strong> tensor over $6$ vector spaces which we fold to a $3$-d tensor by treating each pair $U_1\otimes U_2$, $V_1\otimes V_2$ and $W_1\otimes W_2$ as the underlying vector spaces (forgetting the fact they too are tensor spaces).</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p>We can apply this to the specific tensors representing matrix multiplication.</p>
+<div
+    class="alert alert-important my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-important) 10%, transparent);
+              border-left-color: var(--color-important);
+              --hover-bg: color-mix(in srgb, var(--color-important) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-important) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-2-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-2-title"
+          class="m-0 font-semibold text-foreground/90">
+          Lemma
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-2-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>Let $\langle n,m,p \rangle$ denote the tensor corresponding to the multiplication of $n \times m$ and $m \times p$ matrices. Then:
+$$ \langle n_{1},m_{1},p_{1} \rangle \otimes \langle n_{2},m_{2},p_{2} \rangle \cong \langle n_{1}n_{2},m_{1}m_{2},p_{1}p_{2} \rangle $$</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p><strong>Proof.</strong>
+Our vector spaces are $U_{k}=\mathbb{F}^{n_{k}\times m_{k}}$, $V_{k}= \mathbb{F}^{m_{k} \times p_{k}}$, and $W_{k}=\mathbb{F}^{n_{k}\times p_{k}}$ for $k=1,2$.
+First, observe the isomorphism of the tensor product of matrix spaces:
+$$ U_{1}\otimes U_{2}=\mathbb{F}^{n_{1}\times m_{1}}\otimes \mathbb{F}^{n_{2}\times m_{2}}\cong \mathbb{F}^{n_{1}n_{2}\times m_{1}m_{2}} $$
+This isomorphism is given explicitly by the Kronecker product map:
+$$ E_{i,k} \otimes E_{i&rsquo;,k&rsquo;} \mapsto E_{i n_2 + i&rsquo;, k m_2 + k&rsquo;} $$
+Using double indices for the bases, and recalling the definition of the matrix multiplication tensor, we see that non-zero products of coefficients of both tensors are:
+$$
+T^{1}_{(i,k),(k,j),(i,j)}\cdot T^{2}_{(i&rsquo;,k&rsquo;),(k&rsquo;,j&rsquo;),(i&rsquo;,j&rsquo;)}=1\cdot 1$$
+Hence the non-zero coefficients of $\langle n_1,m_1,p_1\rangle \otimes \langle n_2,m_2,p_2\rangle$ are the coefficients of $$(E_{i,k}\otimes E_{k,j}\otimes E_{i,j})\otimes (E_{i&rsquo;,k&rsquo;}\otimes E_{k&rsquo;,j&rsquo;}\otimes E_{i&rsquo;,j&rsquo;})\in (U_1\otimes V_1\otimes W_1)\otimes (U_2 \otimes V_2\otimes W_2)$$
+which is mapped to $$E_{in_2 +i&rsquo;, km_2 +k&rsquo;}\otimes E_{km_2 + k&rsquo;, j p_2 + j&rsquo;} \otimes E_{in_2+i&rsquo;,j p_2 +j&rsquo;} \in (U_1\otimes U_2)\otimes (V_1\otimes V_2)\otimes (W_1 \otimes W_2)$$
+This is exactly the matrix multiplication tensor of size $\langle n_1n_2 ,m_1m_2,p_1p_2\rangle$. $\blacksquare$</p>
+<p>The most important property of the tensor product regarding complexity is:</p>
+<div
+    class="alert alert-important my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-important) 10%, transparent);
+              border-left-color: var(--color-important);
+              --hover-bg: color-mix(in srgb, var(--color-important) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-important) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-3-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-3-title"
+          class="m-0 font-semibold text-foreground/90">
+          Lemma
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-3-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>Tensor rank is <strong>sub-multiplicative</strong> under tensor products.
+$$ R(\mathcal{T}_{1}\otimes \mathcal{T}_{2})\le R(\mathcal{T}_{1})\cdot R(\mathcal{T}_{2}) $$</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p><strong>Proof.</strong>
+This follows directly from the definition. If $\mathcal{T}_1 = \sum_{r=1}^{R_1} \mathbf{t}^1_r$ and $\mathcal{T}_2 = \sum_{s=1}^{R_2} \mathbf{t}^2_s$ are optimal decompositions into simple tensors, then $\mathcal{T}_1 \otimes \mathcal{T}_2 = \sum_{r,s} \mathbf{t}^1_r \otimes \mathbf{t}^2_s$ is a decomposition into $R_1 R_2$ simple tensors. $\blacksquare$</p>
+<h2 id="permutations-and-symmetrization">Permutations and Symmetrization</h2>
+<p>We wish to discuss certain helpful properties of the matrix multiplication tensor. We start with the following lemma:</p>
+<div
+    class="alert alert-important my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-important) 10%, transparent);
+              border-left-color: var(--color-important);
+              --hover-bg: color-mix(in srgb, var(--color-important) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-important) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-4-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-4-title"
+          class="m-0 font-semibold text-foreground/90">
+          Lemma (Trace Formula)
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-4-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>Consider the polynomial $P$ for the matrix multiplication tensor $\langle n,m,p\rangle$. Let $X$ denote the $X_{i,k}$ variables ordered as a matrix, and similarly let $Y,Z$ denote the variable matrices. Then $$\langle n,m,p\rangle =\mathrm{Tr}(XYZ^{\top})$$</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p><strong>Proof.</strong> By definition $$\mathrm{Tr}(XYZ^{\top})=\sum_{i} [XYZ^{\top}]_{i,i}=\sum_{i}\sum_{j,k} X_{i,k}Y_{k,j} Z^{\top}_{j,i}=\sum_{i,j,k}X_{i,k}Y_{k,j}Z_{i,j}=\langle n,m,p\rangle$$</p>
+<div
+    class="alert alert-important my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-important) 10%, transparent);
+              border-left-color: var(--color-important);
+              --hover-bg: color-mix(in srgb, var(--color-important) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-important) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-5-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-5-title"
+          class="m-0 font-semibold text-foreground/90">
+          Lemma (Permutation Invariance)
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-5-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>For every permutation $\sigma:[3]\to [3]$ of the dimensions $(n_0, n_1, n_2)$, it holds that:
+$$ R(\langle n_{0},n_{1},n_{2} \rangle)=R(\langle n_{\sigma(0)},n_{\sigma(1)},n_{\sigma(2)} \rangle) $$</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p><strong>Proof.</strong>
+It suffices to prove this for the generators of the permutation group $S_3$: the cyclic shift $(012)$ and the transposition $(02)$. Let $(\mathbf{U},\mathbf{V},\mathbf{W})$ be an algorithm (decomposition) for $\langle n_{0},n_{1},n_{2} \rangle$.</p>
+<ol>
+<li>
+<p><strong>Cyclic Shift $\sigma=(012)$:</strong> We want to show $R(\langle n_{1},n_{2},n_{0} \rangle) = R(\langle n_{0},n_{1},n_{2} \rangle)$.
+Recall that cyclic property of the trace implies $\text{Tr}(ABC) = \text{Tr}(BCA)$. Thus, letting $X$ denote the $n_0\times n_1$ variable matrix, $Y$ denote the $n_1\times n_2$ variable matrix and $Z$ denote the $n_0\times n_2$ variable matrix, we have by the trace formula: $$\langle n_0,n_1,n_2\rangle = \mathrm{Tr}(XYZ^{\top})=\mathrm{Tr}(YZ^{\top}X)$$
+Note that $Y$ has shape $n_1\times n_2$, $Z^{\top}$ has shape $n_2\times n_0$ and $X$ has shape $n_0\times n_1$. Therefore by <strong>filling in</strong> the values of an input $n_1\times n_2$ matrix $A$ into $Y$ variables, the values of the second input $n_2\times n_0$ matrix into $Z^{\top}$, we can read the value of $(AB)_{(i,j)}$ from the coefficient of the variable $X_{j,i}$. More specifically, the formula above computes $(AB)^{\top}$, and moreover provides a bilinear algorithm with the same inner dimension. Note that by permuting the rows of a bilinear algorithm we can deal with a transposed input or output, which is just a change of basis. Thus we have obtained an algorithm for $\langle n_1,n_2,n_0\rangle$ with the same rank.</p>
+</li>
+<li>
+<p><strong>Transposition $\sigma=(02)$:</strong> We want to show $R(\langle n_{2},n_{1},n_{0} \rangle) = R(\langle n_{0},n_{1},n_{2} \rangle)$.
+This corresponds to the fact that $(AB)^\top = B^\top A^\top$. Indeed, $\langle n_2, n_1, n_0 \rangle$ represents the multiplication of an $n_2 \times n_1$ matrix by an $n_1 \times n_0$ matrix. By identifying the spaces via the transpose map (swapping row/column indices in the basis), the tensor remains structurally identical.
+Explicitly, define $\widetilde{\mathbf{U}}$ by taking $\mathbf{W}$ and re-ordering rows according to the transpose order, and $\widetilde{\mathbf{W}}$ by taking $\mathbf{U}$ in transpose order. Then $(\widetilde{\mathbf{W}}, \widetilde{\mathbf{V}}, \widetilde{\mathbf{U}})$ is an algorithm for the permuted tensor. $\blacksquare$</p>
+</li>
+</ol>
+<p>This leads to a powerful reduction technique:</p>
+<div
+    class="alert alert-tip my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-tip) 10%, transparent);
+              border-left-color: var(--color-tip);
+              --hover-bg: color-mix(in srgb, var(--color-tip) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-tip) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-6-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-6-title"
+          class="m-0 font-semibold text-foreground/90">
+          Proposition (Symmetrization)
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-6-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>If $R(\langle n,m,p \rangle) \le r$, then:
+$$ \omega \le \log_{nmp}(r^{3}) = \log_{\sqrt[3]{nmp}}(r) $$
+In the square case $n=m=p$, this recovers the result $\omega \le \log_n r$.</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p><strong>Proof.</strong>
+Suppose $R(\langle n,m,p \rangle) \le r$. By the Lemma above, the rank is invariant under permutations, so $R(\langle m,p,n \rangle) \le r$ and $R(\langle p,n,m \rangle) \le r$.
+Using the sub-multiplicative property:
+$$
+R( \langle n,m,p \rangle \otimes \langle m,p,n \rangle \otimes \langle p,n,m \rangle ) \le r \cdot r \cdot r = r^3
+$$
+However, the tensor product of these three is isomorphic to $\langle nmp, nmp, nmp \rangle$. Thus:
+$$ R(\langle nmp, nmp, nmp \rangle) \le r^3 $$
+By a corollary from the previous post, we obtain the upper bound $$ \omega \le \log_{nmp} (R(\langle nmp, nmp, nmp \rangle)) \le \log_{nmp}(r^3) $$
+$\blacksquare$</p>
+<h2 id="tensor-operations---direct-sum">Tensor Operations - Direct Sum</h2>
+<div
+    class="alert alert-caution my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-caution) 10%, transparent);
+              border-left-color: var(--color-caution);
+              --hover-bg: color-mix(in srgb, var(--color-caution) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-caution) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-7-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-7-title"
+          class="m-0 font-semibold text-foreground/90">
+          Definition
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-7-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>Let $\mathcal{T}_{1}$ (over $U_{1}\otimes V_{1}\otimes W_{1}$) and $\mathcal{T}_{2}$ (over $U_{2}\otimes V_{2} \otimes W_{2}$) be tensors. Their <strong>direct sum</strong> $\mathcal{T}_{1}\oplus \mathcal{T}_{2}$ is a tensor over $(U_{1}\oplus U_{2})\otimes (V_{1}\oplus V_{2}) \otimes (W_{1} \oplus W_{2})$, given by:
+$$
+\begin{aligned}
+\mathcal{T}_{1}\oplus \mathcal{T}_{2} &amp;= \sum_{i,j,\ell} T_{i,j,\ell}^{1}[(u^{1}_{i} \oplus 0)\otimes (v_{j}^{1} \oplus 0) \otimes (w_{\ell}^{1} \oplus 0)] \\
+&amp;+ \sum_{i&rsquo;,j&rsquo;,\ell&rsquo;} T_{i&rsquo;,j&rsquo;,\ell&rsquo;}^{2}[(0\oplus u_{i&rsquo;}^{2})\otimes (0\oplus v_{j&rsquo;}^{2}) \otimes(0\oplus w_{\ell&rsquo;}^{2})]
+\end{aligned}
+$$</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p>In words, we embed the variables of $\mathcal{T}_{1}$ and $\mathcal{T}_2$ into disjoint subspaces. The direct sum acts like $\mathcal{T}_1$ on the first subspace and $\mathcal{T}_2$ on the second, with zero interaction between them. The following lemma follows easily from definition:</p>
+<div
+    class="alert alert-important my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-important) 10%, transparent);
+              border-left-color: var(--color-important);
+              --hover-bg: color-mix(in srgb, var(--color-important) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-important) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-8-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-8-title"
+          class="m-0 font-semibold text-foreground/90">
+          Lemma
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-8-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>Tensor rank is <strong>sub-additive</strong> under direct sums:
+$$ R(\mathcal{T}_{1}\oplus \mathcal{T}_{2})\le R(\mathcal{T}_{1})+ R(\mathcal{T}_{2}) $$</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p><strong>Remark.</strong> Note that $\langle n_{1},m_{1},p_{1} \rangle \oplus \langle n_{2},m_{2},p_{2} \rangle \neq \langle n_{1}+n_{2},m_{1}+m_{2},p_{1}+p_{2} \rangle$. The direct sum corresponds to performing two independent matrix multiplications side-by-side, not multiplying two larger block matrices.</p>
+<h2 id="tensor-restriction">Tensor Restriction</h2>
+<div
+    class="alert alert-caution my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-caution) 10%, transparent);
+              border-left-color: var(--color-caution);
+              --hover-bg: color-mix(in srgb, var(--color-caution) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-caution) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-9-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-9-title"
+          class="m-0 font-semibold text-foreground/90">
+          Definition
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-9-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>We say that a tensor $\mathcal{T}$ <strong>restricts</strong> to $\mathcal{T}&rsquo;$, denoted by $\mathcal{T}&rsquo;\le \mathcal{T}$, if there exist <strong>linear maps</strong> $f_{U}:U\to U&rsquo;$, $f_{V}:V\to V&rsquo;$, $f_{W}:W\to W&rsquo;$ such that:
+$$ (f_{U}\otimes f_{V} \otimes f_{W})(\mathcal{T}) = \mathcal{T}&rsquo; $$</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p>Recall that given linear functions $f:U\to X,g:V\to Y$ we can define $f\otimes g:U\otimes V\to X\otimes Y$ by defining $$(f\otimes g)(u,v)=(f(u))\otimes (g(v))$$
+and noting this definition is bilinear and thus extends to $U\otimes V$ (by the universal property).</p>
+<div
+    class="alert alert-important my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-important) 10%, transparent);
+              border-left-color: var(--color-important);
+              --hover-bg: color-mix(in srgb, var(--color-important) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-important) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-10-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-10-title"
+          class="m-0 font-semibold text-foreground/90">
+          Lemma
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-10-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>If $\mathcal{T}&rsquo;\le \mathcal{T}$, then $R(\mathcal{T}&rsquo;)\le R(\mathcal{T})$.</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p><strong>Proof.</strong>
+If $\mathcal{T} = \sum_{s=1}^r u_s \otimes v_s \otimes w_s$, applying the linear maps element-wise yields:
+$$ \mathcal{T}&rsquo; = \sum_{s=1}^r f_U(u_s) \otimes f_V(v_s) \otimes f_W(w_s) $$
+This is a valid decomposition for $\mathcal{T}&rsquo;$ of size $r$ (though a better one might exist). $\blacksquare$</p>
+<p><strong>Example:</strong>
+Consider the tensor over $\mathbb{R}^{3}\otimes \mathbb{R}^{2}\otimes \mathbb{R}^{2}$ given by:
+$$ \mathcal{T}=\sum_{i=0}^{2}x_{i}y_{0}z_{0}+\sum_{j=0}^{1}x_{0}y_{i}z_{i} $$
+Let $f_{U}$ be the projection that zeros out $x_0$: $f(\alpha_{0} x_{0}+\alpha_{1}x_{1}+\alpha_{2} x_{2})=\alpha_{1}x_{1}+\alpha_{2}x_{2}$. Let $f_{V}, f_W$ be identity maps.
+Then $(f_{U}\otimes f_{V} \otimes f_{W})(\mathcal{T}) = x_{1}y_{0}z_{0}+x_{2}y_0z_{0}$.
+This result is isomorphic to a tensor in a smaller space, showing we can &ldquo;restrict&rdquo; tensors to simpler forms by projecting out variables.</p>
+<h2 id="triple-product-condition">Triple Product Condition</h2>
+<p>We finish this post with a precise characterization of the matrix multiplication tensor using the columns of the algorithm matrices.</p>
+<div
+    class="alert alert-caution my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-caution) 10%, transparent);
+              border-left-color: var(--color-caution);
+              --hover-bg: color-mix(in srgb, var(--color-caution) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-caution) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-11-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-11-title"
+          class="m-0 font-semibold text-foreground/90">
+          Definition
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-11-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>Let $u,v,w \in \mathbb{F}^r$. We define their <strong>triple product</strong> by:
+$$ \langle u,v,w \rangle = \sum_{s=1}^{r} u_{s}v_{s}w_{s} $$</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<div
+    class="alert alert-tip my-6 overflow-hidden rounded-lg transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
+    style="background-color: color-mix(in srgb, var(--color-tip) 10%, transparent);
+              border-left-color: var(--color-tip);
+              --hover-bg: color-mix(in srgb, var(--color-tip) 15%, transparent);"
+    onmouseover="this.style.backgroundColor = this.style.getPropertyValue('--hover-bg')"
+    onmouseout="this.style.backgroundColor = 'color-mix(in srgb, var(--color-tip) 10%, transparent)'"
+    role="alert"
+    aria-labelledby="alert-12-title">
+    
+    <div
+      class=" flex items-center justify-between px-6 py-6"
+      >
+      <div class="flex items-center gap-3">
+        
+        <h4
+          id="alert-12-title"
+          class="m-0 font-semibold text-foreground/90">
+          Theorem (Triple Product Condition)
+        </h4>
+      </div>
+
+      
+      
+    </div>
+
+    
+    <div
+      id="alert-12-content"
+      class="alert-content  px-6 pb-6">
+      <div class="prose prose-sm text-foreground/90 max-w-none">
+        <p>Let $(\mathbf{U},\mathbf{V},\mathbf{W})$ be a bilinear algorithm with inner dimension $r$. Let the columns of these matrices be indexed by the basis elements of the matrix spaces (e.g., $\mathbf{U}_{*, (i,k)}$ is the column corresponding to the matrix entry $A_{i,k}$).
+The algorithm computes Matrix Multiplication $\langle n,m,p \rangle$ if and only if:
+$$ \langle \mathbf{U}_{*,(i,k)},\mathbf{V}_{*,(k&rsquo;,j)}, \mathbf{W}_{*,(i&rsquo;,j&rsquo;)} \rangle = \begin{cases} 1 &amp; i=i&rsquo; \land k=k&rsquo; \land j=j&rsquo; \\ 0 &amp; \text{else} \end{cases} $$</p>
+      </div>
+    </div>
+  </div><script>
+function toggleAlert(alertId) {
+  const content = document.getElementById(alertId + '-content');
+  const chevron = document.getElementById(alertId + '-chevron');
+  const header = content.previousElementSibling;
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    chevron.style.transform = 'rotate(0deg)';
+    header.setAttribute('aria-expanded', 'true');
+  } else {
+    content.classList.add('hidden');
+    chevron.style.transform = 'rotate(-90deg)';
+    header.setAttribute('aria-expanded', 'false');
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const collapsedAlerts = document.querySelectorAll('.alert-content.hidden');
+  collapsedAlerts.forEach(function(content) {
+    const alertId = content.id.replace('-content', '');
+    const chevron = document.getElementById(alertId + '-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(-90deg)';
+    }
+  });
+});
+</script>
+
+<p><strong>Proof.</strong>
+Recall that the tensor for the algorithm $(\mathbf{U},\mathbf{V},\mathbf{W})$ is given by:
+$$ \mathcal{T}_{alg} = \sum_{s=1}^r (\mathbf{u}_s \otimes \mathbf{v}_s \otimes \mathbf{w}_s) $$
+where $\mathbf{u}_s$ are the rows of $\mathbf{U}$. The coefficient of this tensor at the index tuple $((i,k), (k&rsquo;,j), (i&rsquo;,j&rsquo;))$ is exactly:
+$$ \sum_{s=1}^r (\mathbf{U})_{s, (i,k)} (\mathbf{V})_{s, (k&rsquo;,j)} (\mathbf{W})_{s, (i&rsquo;,j&rsquo;)} = \langle \mathbf{U}_{*,(i,k)},\mathbf{V}_{*,(k&rsquo;,j)}, \mathbf{W}_{*,(i&rsquo;,j&rsquo;)} \rangle $$
+On the other hand, the definition of the Matrix Multiplication tensor $\langle n,m,p \rangle$ is that the coefficient is $1$ if the indices match $A_{ik} B_{kj} = C_{ij}$ (i.e., $k=k&rsquo;$, $i=i&rsquo;$, $j=j&rsquo;$) and $0$ otherwise.
+Equating the coefficients of $\mathcal{T}_{alg}$ and $\langle n,m,p \rangle$ yields the condition. $\blacksquare$</p>
+<h2 id="references">References</h2>
+<ol>
+<li><strong>Bürgisser, P., Clausen, M., &amp; Shokrollahi, M. A.</strong> (1997). <a href="https://doi.org/10.1007/978-3-662-03338-8"target="_blank"
+  class="inline-flex items-center gap-1"
+><em>Algebraic Complexity Theory</em><svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+</a>.</li>
+<li><strong>Bläser, M.</strong> (2013). <a href="https://doi.org/10.4086/toc.gs.2013.005"target="_blank"
+  class="inline-flex items-center gap-1"
+><em>Fast Matrix Multiplication</em><svg class="h-3 w-3 flex-shrink-0" id="external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+</a>.</li>
+</ol>
+
+  </article>
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  <nav
+    class="post-navigation mb-12"
+    aria-label="Post navigation">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      
+      <div class="nav-item">
+        
+          <a
+            href="/posts/fmm-2/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none">
+            <div>
+              <div class="mb-3 flex items-center gap-3">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+</svg>
+                <span class="text-muted-foreground text-sm font-medium">
+                  Previous
+                </span>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-lg leading-tight font-semibold transition-colors duration-200">
+                Fast Matrix Multiplication - Part 2
+              </h3>
+            </div>
+
+            <div
+              class="text-muted-foreground mt-auto flex items-center gap-2 text-xs">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+              <time datetime="2026-01-14">
+                Jan 14
+              </time>
+            </div>
+          </a>
+        
+      </div>
+
+      
+      <div class="nav-item">
+        
+          <a
+            href="/posts/fmm-4/"
+            class="group bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex min-h-[140px] flex-col justify-between rounded-xl border p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none">
+            <div>
+              <div class="mb-3 flex items-center justify-end gap-3">
+                <span class="text-muted-foreground text-sm font-medium">
+                  Next
+                </span>
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg>
+              </div>
+
+              <h3
+                class="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-right text-lg leading-tight font-semibold transition-colors duration-200">
+                Fast Matrix Multiplication - Part 4
+              </h3>
+            </div>
+
+            <div
+              class="text-muted-foreground mt-auto flex items-center justify-end gap-2 text-xs">
+              <time datetime="2026-01-16">
+                Jan 16
+              </time>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+</svg>
+
+            </div>
+          </a>
+        
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  <section class="related-posts mb-12">
+    
+    <div class="mb-6 flex items-center gap-3">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+</svg>
+      <h2 class="text-foreground text-2xl font-bold">
+        Related Posts
+      </h2>
+    </div>
+
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+      
+        <article class="group">
+          <a href="/posts/fmm-2/" class="block">
+            <div class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none min-h-[120px]">
+              <h3 class="text-foreground group-hover:text-primary text-lg font-semibold leading-snug line-clamp-3 w-full">
+                Fast Matrix Multiplication - Part 2
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+        <article class="group">
+          <a href="/posts/fmm-1/" class="block">
+            <div class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none min-h-[120px]">
+              <h3 class="text-foreground group-hover:text-primary text-lg font-semibold leading-snug line-clamp-3 w-full">
+                Fast Matrix Multiplication - Part 1
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+        <article class="group">
+          <a href="/posts/matroid-theory/" class="block">
+            <div class="bg-card border-border hover:bg-primary/5 hover:border-primary/20 focus:ring-primary/20 flex items-center rounded-xl border p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:outline-none min-h-[120px]">
+              <h3 class="text-foreground group-hover:text-primary text-lg font-semibold leading-snug line-clamp-3 w-full">
+                Basic Matroid Theory
+              </h3>
+            </div>
+          </a>
+        </article>
+      
+    </div>
+  </section>
+
+
+
+
+  
+  
+
+
+    </main>
+
+    
+        
+
+
+  
+
+  
+
+  
+  <aside
+    id="toc-sidebar"
+    class="toc-sidebar hidden xl:block fixed toc-sidebar-left"
+    style="max-width: 280px; max-height: 80vh;"
+    aria-label="Table of Contents Navigation">
+
+    
+    <div class="mb-4 flex items-center gap-2">
+      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+      <h2 class="text-foreground text-sm font-semibold">
+        Table of Contents
+      </h2>
+    </div>
+
+    
+    <nav
+      id="toc-sidebar-content"
+      class="toc-sidebar-scroll overflow-y-auto pr-2"
+      style="max-height: calc(80vh - 3rem);">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#tensor-operations---tensor-product">Tensor Operations - Tensor Product</a></li>
+    <li><a href="#permutations-and-symmetrization">Permutations and Symmetrization</a></li>
+    <li><a href="#tensor-operations---direct-sum">Tensor Operations - Direct Sum</a></li>
+    <li><a href="#tensor-restriction">Tensor Restriction</a></li>
+    <li><a href="#triple-product-condition">Triple Product Condition</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+    </nav>
+  </aside>
+
+
+        
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+  <aside
+    id="series-sidebar"
+    class="series-sidebar hidden xl:block fixed series-sidebar-right"
+    data-same-side=""
+    style="max-width: 280px; max-height: 80vh; top: 6rem;"
+    aria-label="Series Navigation">
+
+    
+    <div class="mb-4 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M21 4H3a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2M3 19V6h8v13zm18 0h-8V6h8zm-7-9.5h6V11h-6zm0 2.5h6v1.5h-6zm0 2.5h6V16h-6z"/></svg>
+        <h2 class="text-foreground text-sm font-semibold">
+          Series
+        </h2>
+      </div>
+        <span class="text-muted-foreground text-xs font-medium">
+          2/4
+        </span>
+    </div>
+
+    
+      <div class="mb-3 rounded-lg bg-primary/10 px-3 py-2">
+        <h3 class="text-primary text-sm font-medium line-clamp-2">
+          Fast Matrix Multiplication
+        </h3>
+      </div>
+
+    
+    <nav
+      id="series-sidebar-content"
+      class="series-sidebar-scroll overflow-y-auto pr-2"
+      style="max-height: calc(80vh - 8rem);">
+        <ol class="space-y-2">
+            <li>
+              <a
+                href="/posts/fmm-4/"
+                class="group block rounded-lg px-3 py-2 text-sm transition-all duration-200 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                >
+                <div class="flex items-start gap-2">
+                  <span class="flex-shrink-0 text-muted-foreground/60">
+                    1.
+                  </span>
+                  <span class="flex-1 line-clamp-2">Fast Matrix Multiplication - Part 4</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/posts/fmm-3/"
+                class="group block rounded-lg px-3 py-2 text-sm transition-all duration-200 bg-primary/20 text-primary font-medium"
+                aria-current="page">
+                <div class="flex items-start gap-2">
+                  <span class="flex-shrink-0 text-primary">
+                    2.
+                  </span>
+                  <span class="flex-1 line-clamp-2">Fast Matrix Multiplication - Part 3</span>
+                    <span class="flex-shrink-0">
+                      <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+</svg>
+                    </span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/posts/fmm-2/"
+                class="group block rounded-lg px-3 py-2 text-sm transition-all duration-200 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                >
+                <div class="flex items-start gap-2">
+                  <span class="flex-shrink-0 text-muted-foreground/60">
+                    3.
+                  </span>
+                  <span class="flex-1 line-clamp-2">Fast Matrix Multiplication - Part 2</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/posts/fmm-1/"
+                class="group block rounded-lg px-3 py-2 text-sm transition-all duration-200 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                >
+                <div class="flex items-start gap-2">
+                  <span class="flex-shrink-0 text-muted-foreground/60">
+                    4.
+                  </span>
+                  <span class="flex-1 line-clamp-2">Fast Matrix Multiplication - Part 1</span>
+                </div>
+              </a>
+            </li>
+        </ol>
+    </nav>
+  </aside>
+
+
+
+    <footer class="mx-auto max-w-4xl px-4 py-8">
+  <div class="px-6 py-6">
+    
+    
+
+
+    
+    
+
+
+    
+    <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+      
+      <div class="text-muted-foreground text-sm text-center md:text-left">
+        <p class="mb-2">
+          &copy; 2026 Yahel Uffenheimer.
+          All rights reserved.
+        </p>
+        <p class="flex flex-wrap items-center justify-center gap-1 md:justify-start">
+          <span>Powered by</span>
+          <a 
+            href="https://gohugo.io/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+          >
+            Hugo
+          </a>
+          <span>&</span>
+          <a 
+            href="https://github.com/tom2almighty/hugo-narrow" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-primary hover:text-primary/80 font-medium transition-colors duration-200 hover:underline"
+          >
+            Narrow
+          </a>
+        </p>
+      </div>
+
+      
+      
+        <div class="flex items-center gap-3">
+          
+            <a
+              href="https://linkedin.com/in/yahel1216"
+              
+                target="_blank" rel="noopener noreferrer"
+              
+              class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+              title="LinkedIn"
+              aria-label="LinkedIn">
+              
+                <svg class="h-6 w-6" aria-label="LinkedIn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6M2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></g></svg>
+              
+            </a>
+          
+            <a
+              href="mailto:yahel.uffenheimer@mail.huji.ac.il"
+              
+              class="text-muted-foreground hover:text-primary focus:ring-primary/20 rounded-lg p-1 transition-all duration-300 ease-out hover:scale-110 focus:ring-2 focus:outline-none"
+              title="Email"
+              aria-label="Email">
+              
+                <svg class="h-6 w-6" aria-label="Email" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+</svg>
+
+              
+            </a>
+          
+        </div>
+      
+
+    </div>
+  </div>
+</footer>
+
+    
+    
+
+
+
+
+<div
+  id="dock"
+  class="pointer-events-none fixed bottom-4 left-1/2 z-[9999] w-fit -translate-x-1/2 translate-y-24 opacity-0 transition-all duration-300 ease-out sm:right-0 sm:left-0 sm:mx-auto sm:translate-x-0"
+  data-dock-mode="scroll"
+  role="toolbar"
+  aria-label="Quick action toolbar">
+  <nav
+    class="border-border bg-card/80 scrollbar-hide xs:px-3 xs:py-2 mx-auto flex max-w-[calc(100vw-2rem)] min-w-fit items-center justify-center overflow-x-auto rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-sm sm:px-4 sm:py-3">
+    
+    
+      <button
+        id="dock-back"
+        class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex flex-shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+        title="Back"
+        aria-label="Back">
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m12 19-7-7 7-7"/>
+  <path d="M19 12H5"/>
+</svg>
+
+        <span class="hidden sm:inline"
+          >Back</span
+        >
+      </button>
+
+      
+      <div class="bg-border xs:mx-1 mx-2 h-6 w-px sm:mx-2"></div>
+    
+
+
+    
+    
+
+        
+
+        
+
+        <button
+          id="dock-navigation"
+          class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex flex-shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2 xl:hidden"
+          title="Navigation"
+          aria-label="Navigation">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+</svg>
+
+          <span class="hidden sm:inline">Navigation</span>
+        </button>
+
+        
+        <div class="bg-border xs:mx-1 mx-2 h-6 w-px sm:mx-2 xl:hidden"></div>
+    
+
+
+    
+    <button
+      id="dock-search"
+      class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-3 xs:py-1.5 flex flex-shrink-0 items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-4 sm:py-2"
+      title="Search"
+      aria-label="Search">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+      <span class="hidden md:inline"
+        >Search</span
+      >
+    </button>
+
+    
+    <div class="bg-border xs:mx-1 mx-2 h-6 w-px sm:mx-2"></div>
+
+    
+    
+    
+
+
+    
+    <button
+      id="dock-top"
+      class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 xs:px-2 xs:py-1.5 flex flex-shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none sm:px-3 sm:py-2"
+      title="Back to Top"
+      aria-label="Back to Top">
+      <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 15-6-6-6 6"/>
+</svg>
+
+      <span class="hidden sm:inline"
+        >Top</span
+      >
+    </button>
+  </nav>
+</div>
+
+
+
+
+
+    
+      
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+  <div
+    id="navigation-overlay"
+    class="pointer-events-none fixed inset-0 z-40 bg-black/50 opacity-0 backdrop-blur-sm transition-all duration-300 xl:hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="navigation-title"></div>
+
+  
+  <div
+    id="navigation-card"
+    class="pointer-events-none fixed inset-4 z-50 flex w-auto scale-95 items-center justify-center opacity-0 transition-all duration-300 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:block sm:w-full sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 xl:hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="navigation-title">
+    <div
+      class="bg-card border-border w-full max-w-sm overflow-hidden rounded-xl border shadow-xl sm:max-w-md">
+      
+      <div
+        class="border-border bg-muted/30 flex items-center justify-between border-b p-4">
+        <div class="flex items-center gap-3">
+          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="8" x2="21" y1="6" y2="6"/>
+  <line x1="8" x2="21" y1="12" y2="12"/>
+  <line x1="8" x2="21" y1="18" y2="18"/>
+  <line x1="3" x2="3.01" y1="6" y2="6"/>
+  <line x1="3" x2="3.01" y1="12" y2="12"/>
+  <line x1="3" x2="3.01" y1="18" y2="18"/>
+</svg>
+
+          <h2 id="navigation-title" class="text-foreground text-lg font-semibold">
+            
+              Navigation
+            
+          </h2>
+        </div>
+
+        
+        <button
+          id="navigation-close"
+          class="text-muted-foreground hover:text-primary hover:bg-primary/10 focus:ring-primary/20 rounded-lg p-2 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-105 focus:ring-2 focus:outline-none"
+          title="Close"
+          aria-label="Close">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+        </button>
+      </div>
+
+      
+        <div class="border-border flex border-b">
+          <button
+            id="nav-tab-toc"
+            class="nav-tab active flex-1 border-b-2 border-primary px-4 py-3 text-sm font-medium text-primary transition-colors"
+            data-tab="toc"
+            aria-selected="true">
+            Table of Contents
+          </button>
+          <button
+            id="nav-tab-series"
+            class="nav-tab text-muted-foreground hover:text-foreground flex-1 border-b-2 border-transparent px-4 py-3 text-sm font-medium transition-colors"
+            data-tab="series"
+            aria-selected="false">
+            Series
+              <span class="ml-1 text-xs">(2/4)</span>
+          </button>
+        </div>
+
+      
+      <div class="max-h-96 overflow-y-auto p-4">
+        
+        <nav
+          id="nav-content-toc"
+          class="nav-content block"
+          aria-label="Table of Contents Navigation">
+            <div id="toc-content">
+              <nav id="TableOfContents">
+  <ul>
+    <li><a href="#tensor-operations---tensor-product">Tensor Operations - Tensor Product</a></li>
+    <li><a href="#permutations-and-symmetrization">Permutations and Symmetrization</a></li>
+    <li><a href="#tensor-operations---direct-sum">Tensor Operations - Direct Sum</a></li>
+    <li><a href="#tensor-restriction">Tensor Restriction</a></li>
+    <li><a href="#triple-product-condition">Triple Product Condition</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+            </div>
+        </nav>
+
+        
+          <nav
+            id="nav-content-series"
+            class="nav-content hidden"
+            aria-label="Series Navigation">
+              
+              <div class="mb-4 rounded-lg bg-primary/10 px-3 py-2">
+                <h3 class="text-primary text-sm font-medium">
+                  Fast Matrix Multiplication
+                </h3>
+                  <p class="text-muted-foreground mt-1 text-xs">
+                    Part 2 of 4
+                  </p>
+              </div>
+              <ol class="space-y-2">
+                  <li>
+                    <a
+                      href="/posts/fmm-4/"
+                      class="group block rounded-lg px-3 py-2 text-sm transition-all duration-200 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                      >
+                      <div class="flex items-start gap-2">
+                        <span class="flex-shrink-0 text-muted-foreground/60">
+                          1.
+                        </span>
+                        <span class="flex-1">Fast Matrix Multiplication - Part 4</span>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/posts/fmm-3/"
+                      class="group block rounded-lg px-3 py-2 text-sm transition-all duration-200 bg-primary/20 text-primary font-medium"
+                      aria-current="page">
+                      <div class="flex items-start gap-2">
+                        <span class="flex-shrink-0 text-primary">
+                          2.
+                        </span>
+                        <span class="flex-1">Fast Matrix Multiplication - Part 3</span>
+                          <span class="flex-shrink-0">
+                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+</svg>
+                          </span>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/posts/fmm-2/"
+                      class="group block rounded-lg px-3 py-2 text-sm transition-all duration-200 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                      >
+                      <div class="flex items-start gap-2">
+                        <span class="flex-shrink-0 text-muted-foreground/60">
+                          3.
+                        </span>
+                        <span class="flex-1">Fast Matrix Multiplication - Part 2</span>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/posts/fmm-1/"
+                      class="group block rounded-lg px-3 py-2 text-sm transition-all duration-200 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                      >
+                      <div class="flex items-start gap-2">
+                        <span class="flex-shrink-0 text-muted-foreground/60">
+                          4.
+                        </span>
+                        <span class="flex-1">Fast Matrix Multiplication - Part 1</span>
+                      </div>
+                    </a>
+                  </li>
+              </ol>
+          </nav>
+      </div>
+
+      
+      <div class="border-border bg-muted/20 border-t px-4 py-3">
+        <div class="text-muted-foreground text-center text-xs">
+          <span>点击标题快速跳转</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+    integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP"
+    crossorigin="anonymous" />
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+    integrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc+T1b2N+teh/OJfpU0jr6"
+    crossorigin="anonymous"></script>
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"
+    integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh"
+    crossorigin="anonymous"></script>
+
+<script>
+    
+    function initKaTeX() {
+        if (typeof renderMathInElement === 'undefined') {
+            setTimeout(initKaTeX, 100);
+            return;
+        }
+
+        var delimiters = [{"display":true,"left":"$$","right":"$$"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"},{"display":true,"left":"\\[","right":"\\]"}];
+
+        renderMathInElement(document.body, {
+            delimiters: delimiters,
+            throwOnError: false,
+            errorColor: '#cc0000',
+            fleqn: false,
+            leqno: false,
+            trust: false
+        });
+    }
+
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initKaTeX);
+    } else {
+        initKaTeX();
+    }
+</script>
+    
+
+
+
+    
+    
+<div
+  id="search-overlay"
+  class="pointer-events-none fixed inset-0 z-40 bg-black/50 opacity-0 transition-opacity duration-300"></div>
+
+
+<div
+  id="search-modal"
+  class="bg-card border-border pointer-events-none fixed top-1/2 left-1/2 z-50 max-h-[80vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 scale-95 transform overflow-hidden rounded-xl border opacity-0 shadow-xl transition-all duration-300">
+  
+  <div class="border-border flex items-center gap-3 border-b p-4">
+    
+    <div class="text-muted-foreground h-5 w-5 flex-shrink-0">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+    </div>
+
+    
+    <div class="relative flex-1">
+      
+      <button
+        id="search-clear"
+        class="text-muted-foreground hover:text-foreground hover:bg-muted/50 pointer-events-none absolute top-1/2 left-0 z-10 h-5 w-5 -translate-y-1/2 rounded opacity-0 transition-all duration-200"
+        title="Clear"
+        aria-label="Clear">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+      </button>
+
+      
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search posts..."
+        class="text-foreground placeholder:text-muted-foreground w-full border-none bg-transparent pl-8 text-lg outline-none"
+        autocomplete="off"
+        spellcheck="false" />
+    </div>
+
+    
+    <button
+      id="search-close"
+      class="text-muted-foreground hover:text-foreground hover:bg-muted/50 flex h-6 w-6 items-center justify-center rounded-md p-0.5 transition-all duration-200"
+      title="Close"
+      aria-label="Close">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+</svg>
+
+    </button>
+  </div>
+
+  
+  <div id="search-results" class="max-h-96 overflow-y-auto">
+    
+    <div
+      id="search-empty"
+      class="flex flex-col items-center justify-center py-12 text-center">
+      <div
+        class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        Start searching
+      </h3>
+      <p class="text-muted-foreground text-sm">
+        Enter keywords to search articles
+      </p>
+    </div>
+
+    
+    <div
+      id="search-loading"
+      class="flex hidden items-center justify-center py-8">
+      <div
+        class="mr-3 h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+      <span class="text-muted-foreground"
+        >Searching...</span
+      >
+    </div>
+
+    
+    <div
+      id="search-no-results"
+      class="flex hidden flex-col items-center justify-center py-12 text-center">
+      <div
+        class="bg-muted/50 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+</svg>
+
+      </div>
+      <h3 class="text-foreground mb-2 text-lg font-semibold">
+        No results found
+      </h3>
+      <p class="text-muted-foreground text-sm">
+        Try using different keywords
+      </p>
+    </div>
+
+    
+    <div id="search-results-list" class="hidden">
+      
+      <div
+        id="search-stats"
+        class="text-muted-foreground border-border border-b px-4 py-3 text-sm"
+        data-template="Found %d results">
+      </div>
+
+      
+      <div id="search-items" class="divide-border divide-y">
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="border-border bg-muted/20 border-t px-4 py-3">
+    <div
+      class="text-muted-foreground flex items-center justify-between text-xs">
+      <div class="flex items-center gap-2 md:gap-4">
+        <div class="flex items-center gap-1">
+          <kbd
+            class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs"
+            >↑↓</kbd
+          >
+          <span class="hidden sm:inline"
+            >Navigate</span
+          >
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd
+            class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs"
+            >↵</kbd
+          >
+          <span class="hidden sm:inline"
+            >Select</span
+          >
+        </div>
+        <div class="flex items-center gap-1">
+          <kbd
+            class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs"
+            >ESC</kbd
+          >
+          <span class="hidden sm:inline"
+            >Close</span
+          >
+        </div>
+      </div>
+      <div class="search-hint-desktop flex items-center gap-1">
+        <kbd class="bg-muted border-border rounded border px-1.5 py-0.5 text-xs"
+          >⌘K</kbd
+        >
+        <span>Shortcut</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </body>
+</html>

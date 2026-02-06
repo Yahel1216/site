@@ -1,0 +1,13 @@
+{{/* layouts/publications/list.html */}}
+{{ define "main" }}
+<div class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold mb-10 text-foreground">Publications</h1>
+    <div class="flex flex-col">
+        {{ $pages := .Pages.ByDate.Reverse }}
+        {{ $total := len $pages }}
+        {{ range $index, $element := $pages }}
+            {{ partial "content/pub-item.html" (dict "context" . "index" $index "isLast" (eq (add $index 1) $total)) }}
+        {{ end }}
+    </div>
+</div>
+{{ end }}

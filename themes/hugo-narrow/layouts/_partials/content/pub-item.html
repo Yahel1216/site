@@ -1,0 +1,39 @@
+{{/* layouts/partials/publication-item.html */}}
+{{ $myRefName := .context.Site.Params.Author.name }}
+{{ $isLast := .isLast }}
+
+<div class="py-8 {{ if not $isLast }}border-b border-border/50{{ end }}">
+    <span class="inline-block px-2 py-0.5 mb-3 text-[10px] font-bold tracking-widest uppercase bg-secondary text-secondary-foreground rounded">
+        {{ .context.Date.Format "2006" }}
+    </span>
+    
+    <h3 class="text-xl font-bold text-foreground leading-tight">
+        <a href="{{ .context.Params.link | default .context.RelPermalink }}" class="hover:text-primary transition-colors duration-200">
+            {{ .context.Title }}
+            {{ if .context.Params.link }}
+                <span class="text-muted-foreground/40 ml-1 text-sm inline-block">↗</span>
+            {{ end }}
+        </a>
+    </h3>
+
+    <div class="text-base text-muted-foreground mt-3">
+        {{ if .context.Params.authors }}
+            {{ $authLen := (len .context.Params.authors) }}
+            {{ range $a_index, $author := .context.Params.authors }}
+                {{/* Robust matching: trim spaces and check equality */}}
+                {{ if eq (trim $author " ") (trim $myRefName " ") }}
+                    <span class="font-bold text-foreground underline underline-offset-4 decoration-primary/40">{{ $author }}</span>
+                {{- else -}}
+                    {{ $author }}
+                {{- end -}}
+                {{ if lt (add $a_index 1) $authLen }}, {{ end }}
+            {{ end }}
+        {{ end }}
+    </div>
+
+    {{ if .context.Params.journal }}
+        <p class="text-sm italic text-primary/90 mt-2 font-medium">
+            {{ .context.Params.journal }}
+        </p>
+    {{ end }}
+</div>

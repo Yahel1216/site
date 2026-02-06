@@ -1,0 +1,15 @@
+{{/* layouts/partials/features/feature-publications.html */}}
+{{ $publications := where (where .Site.RegularPages "Section" "publications") "Params.featured" true }}
+
+{{ if $publications }}
+<section class="mb-12">
+    <h2 class="text-2xl font-bold mb-4 text-foreground">Featured Publications</h2>
+    <div class="flex flex-col">
+        {{ $pages := $publications.ByDate.Reverse }}
+        {{ $total := len $pages }}
+        {{ range $index, $element := $pages }}
+            {{ partial "content/pub-item.html" (dict "context" . "index" $index "isLast" (eq (add $index 1) $total)) }}
+        {{ end }}
+    </div>
+</section>
+{{ end }}

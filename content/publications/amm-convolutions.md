@@ -1,5 +1,5 @@
 ---
-date: '2026-01-09T19:11:33+02:00'
+date: '2025-11-06'
 draft: false
 title: '(Approximate) Matrix Multiplication via Convolutions'
 authors: ["Yahel Uffenheimer", "Omri Weinstein"]

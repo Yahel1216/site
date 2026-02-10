@@ -1,5 +1,5 @@
 ---
-date: '2026-01-09T19:11:33+02:00'
+date: '2026-02-10'
 draft: false
 title: 'Improved Sparse Recovery for Approximate Matrix Multiplication'
 authors: ["Yahel Uffenheimer", "Omri Weinstein"]

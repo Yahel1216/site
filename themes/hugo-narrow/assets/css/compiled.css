@@ -3910,25 +3910,25 @@
     padding: calc(var(--spacing) * 0);
   }
   .toc-sidebar {
-    width: 280px;
+    width: 250px;
     z-index: 30;
     top: 6rem;
   }
   .toc-sidebar-left {
-    left: max(1rem, calc((100vw - 896px) / 2 - 280px - 2rem));
+    left: max(1rem, calc((100vw - 896px) / 2 - 250px - 2rem));
   }
   .toc-sidebar-right {
-    right: max(1rem, calc((100vw - 896px) / 2 - 280px - 2rem));
+    right: max(1rem, calc((100vw - 896px) / 2 - 250px - 2rem));
   }
   .series-sidebar {
-    width: 280px;
+    width: 250px;
     z-index: 30;
   }
   .series-sidebar-left {
-    left: max(1rem, calc((100vw - 896px) / 2 - 280px - 2rem));
+    left: max(1rem, calc((100vw - 896px) / 2 - 250px - 2rem));
   }
   .series-sidebar-right {
-    right: max(1rem, calc((100vw - 896px) / 2 - 280px - 2rem));
+    right: max(1rem, calc((100vw - 896px) / 2 - 250px - 2rem));
   }
   .series-sidebar-scroll {
     scrollbar-width: thin;

@@ -5,6 +5,7 @@ slug: fmm-4
 draft: false
 katex: true
 description: "The $\\tau$-theorem, obtaining upper bounds on $\\omega$ from independent matrix multiplication tensors"
+series_order: 4
 series: "Fast Matrix Multiplication"
 tags: ["theory", "matrix-multiplication", "tensors"]
 categories: ["Theory", "Matrix Multiplication"]

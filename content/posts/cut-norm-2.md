@@ -4,6 +4,7 @@ date: 2026-01-12
 slug: cut-norm-2
 draft: false
 katex: true
+series_order: 2
 series: "Cut-Norm"
 description: "Using Grothendick's identity to obtain a randomized approximate algorithm for computing the Cut-Norm of a matrix"
 tags: ["optimization", "semi-definite-programming"]

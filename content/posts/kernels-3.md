@@ -6,6 +6,7 @@ draft: false
 katex: true
 description: "Using linear sketching techniques for fast approximation of the polynomial kernel"
 series: "Kernel Methods"
+series_order: 3
 tags: ["optimization", "machine-learning", "linear-algebra", "analysis"]
 categories: ["Machine Learning", "Kernels"]
 ---

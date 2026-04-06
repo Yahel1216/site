@@ -5,6 +5,7 @@ slug: cut-norm
 draft: false
 katex: true
 series: "Cut-Norm"
+series_order: 1
 description: "Using Grothendick's identity to obtain an approximate algorithm for computing the Cut-Norm of a matrix"
 tags: ["optimization", "semi-definite-programming"]
 categories: ["Optimization", "Complexity"]

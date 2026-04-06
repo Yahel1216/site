@@ -6,6 +6,7 @@ draft: false
 katex: true
 description: "Random low dimensional approximations of kernels, using concentration of measure and some Fourier analysis"
 series: "Kernel Methods"
+series_order: 2
 tags: ["optimization", "machine-learning", "linear-algebra", "analysis"]
 categories: ["Machine Learning", "Kernels"]
 ---

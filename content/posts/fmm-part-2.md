@@ -5,6 +5,7 @@ slug: fmm-2
 draft: false
 katex: true
 description: "Bilinear Algorithms, Tensors and the Tensor rank"
+series_order: 2
 series: "Fast Matrix Multiplication"
 tags: ["theory", "matrix-multiplication", "tensors"]
 categories: ["Theory", "Matrix Multiplication"]

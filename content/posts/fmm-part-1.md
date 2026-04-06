@@ -5,6 +5,7 @@ slug: fmm-1
 draft: false
 katex: true
 description: "Matrix Multiplication is sub-cubic (Strassen's algorithm)"
+series_order: 1
 series: "Fast Matrix Multiplication"
 tags: ["theory", "matrix-multiplication"]
 categories: ["Theory", "Matrix Multiplication"]

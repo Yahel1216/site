@@ -6,6 +6,7 @@ draft: false
 katex: true
 description: "Ways to manipulate tensors - the tensor product, direct sum, symmetrization and restriction"
 series: "Fast Matrix Multiplication"
+series_order: 3
 tags: ["theory", "matrix-multiplication", "tensors"]
 categories: ["Theory", "Matrix Multiplication"]
 ---

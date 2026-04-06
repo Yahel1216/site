@@ -6,6 +6,7 @@ draft: false
 katex: true
 description: "How to solve a problem in infinite dimensions while only paying for the dataset size"
 series: "Kernel Methods"
+series_order: 1
 tags: ["optimization", "machine-learning", "linear-algebra"]
 categories: ["Machine Learning", "Kernels"]
 ---

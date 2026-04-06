@@ -6,6 +6,7 @@ draft: false
 katex: true
 description: "A method for estimating the Gram matrix by solving a small eigen-decomposition problem and using some analysis"
 series: "Kernel Methods"
+series_order: 4
 tags: ["optimization", "machine-learning", "linear-algebra", "analysis"]
 categories: ["Machine Learning", "Kernels"]
 ---

@@ -180,9 +180,7 @@ Three cases illustrate the trade-off:
 
 The sweet spot is $r=\Theta(d^{2})$: **the algorithm terminates after $O(d\log(n/d))$ successful reweighting steps on average, and each step solves a sub-problem with $O(d^{2})$ constraints in $d$ dimensions.**
 
-### Summary of the Complexity
-
-We have reduced a single $n\times d$ LP to $O(d\log(n/d))$ sub-problems of size $O(d^{2})\times d$. When $n\gg d$, this is a dramatic improvement: for instance, $n=10^6$ constraints in $d=100$ dimensions gives roughly a few hundred sub-problems, each involving only $10^4$ constraints.
+This reduces a single $n\times d$ LP to $O(d\log(n/d))$ sub-problems of size $O(d^{2})\times d$. When $n\gg d$, this is a dramatic improvement: for instance, $n=10^6$ constraints in $d=100$ dimensions gives roughly a few hundred sub-problems, each involving only $10^4$ constraints.
 
 ### Where Is the Analysis Loose?
 
@@ -190,7 +188,7 @@ The tradeoff may not be optimal. Two sources of slack are worth noting.
 
 First, the lower bound on $B_{t}$ assumes that at each iteration only a single basis element doubles. In practice, $V_R$ may contain multiple basis elements, causing much faster growth. This may be affected by properties like conditioning of the constraints matrix (measuring similarity between rows).
 
-Second, the bound $|S_t|\le|S_{t-1}|(1+\rho)$ assumes $|V_R|$ is always near its maximum of $\rho|S|$. If $|V_R|$ is typically much smaller — as one would expect when the constraints are structured — the growth of $|S|$ slows considerably and the algorithm converges faster.
+Second, the bound $|S_t|\le|S_{t-1}|(1+\rho)$ assumes $|V_R|$ is always near its maximum of $\rho|S|$. If $|V_R|$ is typically much smaller — as one would expect when the constraints are structured — the growth of $|S|$ slows considerably and the algorithm converges faster. Furthermore, if we can choose $\rho$ to be smaller, the analysis improves, but in the current setup $\rho$ is directly affected by the choice of $r$.
 
 Let's see how progress on one of these may affect the runtime:
 > [!important] Lemma
@@ -198,7 +196,17 @@ Let's see how progress on one of these may affect the runtime:
 
 **Proof.** This is a very similar proof as before, but formalized with a potential function. Define $\phi_t= \prod_{j\in B^{\*}}m_j^t$ (the product of multiplicities of basis elements). Then $\phi_T \ge 2^{\sum_t a_t}=2^{Ta}$, as this is the minimal way to double the required number of elements. By the arithmetic-geometric means inequality, $\sqrt[d]{\phi_T} \le \frac{\sum_{j\in B^\*}m_j^T}{d}= \frac{|B_{T}|}{d}$, which gives $2^{Ta/d}\le |S_T|/ d\le e^{T\rho}n/d$. Therefore $d 2^{Ta/d} \le e^{T\rho}n$ which implies $\frac{Ta}{d}-T\rho \log e\le \log n -\log d$, that is $T(a/d-\rho\log e)\le \log(n/d)$. Substituting $\rho\le \frac{a}{2d\log e}$ we obtain $T\le O\left( \frac{d}{a}\log (n/d)\right)$. This setting of $\rho$ is achieved for $r\ge 4\log e\cdot d^2 / a$, which can be much smaller than $d^2$. $\blacksquare$
 
-Whether $r=\Theta(d^2)$ can be improved remains an interesting open question in the general case. Tighter results may be possible under structural assumptions on $A$. A possible way to prove such a result is a **win-win** argument. For example, proving that the average $a$ (as defined above) is rather large, OR some other useful property must hold.
+Whether $r=\Theta(d^2)$ can be improved remains an interesting open question in the general case. Tighter results may be possible under structural assumptions on $A$, or in the case $d$ is a small constant (so we can pay exponential in $d$ runtime). A possible way to prove such a result is a **win-win** argument. For example, proving that the average $a$ (as defined above) is rather large, OR some other useful property must hold.
+
+## A Higher Level View of the Tradeoff
+If we take a step back, we note that $\rho$'s value is chosen to be $\approx \frac{2d}{r+1}$ so that the probability of success at each iteration is at least $1/2$. If we would have taken $\rho$ much smaller, the condition $|V_R|\le \rho |S|$ would have become almost statistically impossible. However, it would have improved the analysis, as pointed out above.
+
+This prompts looking at the algorithm as having two separate parts:
+1. **Part 1**: Generate a $\rho$-net $R$, i.e. $|V_R|\le \rho |S|$.
+2. **Part 2**: Find the violations with respect to $R$ and double their multiplicity in $S$.
+
+The random choice of $R\sim \binom{S}{r}$ is an $\frac{2d}{r+1}$-net with probability at least $1/2$. So the algorithm for part 1 is just a Las Vegas algorithm: draw $R$ until the condition is satisfied. Other algorithms exist to generate nets. In my understanding this is the key to improving the tradeoff:
+>[!quote] Is there an algorithm that generates an $1/d$-net of size $r\ll d^2$ in fast polynomial time (comparable to the random Las Vegas algorithm in the original algorithm)?
 
 ## Conclusion
 
@@ -212,3 +220,5 @@ The result is a reduction from an $n \times d$ LP to $O(d \log(n/d))$ problems o
 2.  **Seidel, R.** (1991). [*Small-Dimensional Linear Programming and Convex Hulls Made Easy*](https://link.springer.com/article/10.1007/BF02574699).
 3.  **Bertsimas, D., & Tsitsiklis, J.N.** (1997). [*Introduction to Linear Optimization*](https://www.researchgate.net/publication/235558951_Introduction_to_Linear_Optimization). 
 4.  **Arora, S., Hazan, E., & Kale, S.** (2012). [*The Multiplicative Weights Update Method: a Meta-Algorithm and Applications*](https://doi.org/10.4086/toc.2012.v008a006).
+5. **Chan, M.T.** (2017). [*Improved Deterministic Algorithms for Linear Programming
+in Low Dimensions*](https://tmc.web.engr.illinois.edu/det_lp.pdf).
